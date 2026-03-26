@@ -2,9 +2,7 @@ DROP DATABASE IF EXISTS byh_buildyourhome;
 CREATE DATABASE byh_buildyourhome CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE byh_buildyourhome;
 
--- =========================
 -- TABLA: usuarios
--- =========================
 DROP TABLE IF EXISTS usuarios;
 CREATE TABLE usuarios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -23,9 +21,7 @@ CREATE TABLE usuarios (
   UNIQUE KEY uq_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- TABLA: categorias
--- =========================
 DROP TABLE IF EXISTS categorias;
 CREATE TABLE categorias (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -34,9 +30,7 @@ CREATE TABLE categorias (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- TABLA: profesional_categorias
--- =========================
 DROP TABLE IF EXISTS profesional_categorias;
 CREATE TABLE profesional_categorias (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -53,9 +47,7 @@ CREATE TABLE profesional_categorias (
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- TABLA: servicios
--- =========================
 DROP TABLE IF EXISTS servicios;
 CREATE TABLE servicios (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -84,9 +76,8 @@ CREATE TABLE servicios (
     ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
+
 -- TABLA: valoraciones
--- =========================
 DROP TABLE IF EXISTS valoraciones;
 CREATE TABLE valoraciones (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -102,9 +93,7 @@ CREATE TABLE valoraciones (
   CONSTRAINT chk_puntuacion CHECK (puntuacion BETWEEN 1 AND 5)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =========================
 -- DATOS INICIALES
--- =========================
 
 INSERT INTO categorias (nombre, descripcion) VALUES
 ('Fontanería', 'Reparaciones e instalaciones de fontanería'),
@@ -129,6 +118,4 @@ INSERT INTO servicios (cliente_id, profesional_id, categoria_id, titulo, descrip
 VALUES
 (2, 3, 1, 'Reparación de fuga de agua', 'Tengo una fuga en el fregadero de la cocina', 'Calle Sol 12, Málaga', 'pendiente');
 
--- Ejemplo de valoración futura
--- INSERT INTO valoraciones (servicio_id, puntuacion, comentario)
--- VALUES (1, 5, 'Muy buen profesional, rápido y amable');
+
