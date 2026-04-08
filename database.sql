@@ -1,103 +1,97 @@
--- BYH - Build Your Home
-
 DROP DATABASE IF EXISTS byh_buildyourhome;
 CREATE DATABASE byh_buildyourhome CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE byh_buildyourhome;
 
-DROP TABLE IF EXISTS valoraciones;
-DROP TABLE IF EXISTS servicios;
-DROP TABLE IF EXISTS portafolio_fotos;
-DROP TABLE IF EXISTS profesional_categorias;
-DROP TABLE IF EXISTS usuarios;
-DROP TABLE IF EXISTS categorias;
-
+-- =========================
+-- TABLA: categorias
+-- =========================
 CREATE TABLE categorias (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
-  descripcion VARCHAR(255) DEFAULT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_categoria_nombre (nombre)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  descripcion VARCHAR(255)
+);
 
-INSERT INTO categorias (id, nombre, descripcion) VALUES
-(1,'Fontanería','Reparaciones e instalaciones de fontanería'),
-(2,'Electricidad','Instalaciones y reparaciones eléctricas'),
-(3,'Pintura','Pintura de interiores y exteriores'),
-(4,'Carpintería','Trabajos de madera y mobiliario'),
-(5,'Albañilería','Obras y reformas de construcción');
+INSERT INTO categorias (nombre, descripcion) VALUES
+('Fontanería', 'Reparaciones e instalaciones de fontanería'),
+('Electricidad', 'Instalaciones y reparaciones eléctricas'),
+('Pintura', 'Trabajos de pintura'),
+('Carpintería', 'Trabajos de madera'),
+('Albañilería', 'Reformas y obras');
 
+-- =========================
+-- TABLA: usuarios
+-- =========================
 CREATE TABLE usuarios (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   apellidos VARCHAR(150) NOT NULL,
-  email VARCHAR(150) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  telefono VARCHAR(20) DEFAULT NULL,
-  direccion VARCHAR(255) DEFAULT NULL,
-  ciudad VARCHAR(100) DEFAULT NULL,
-  rol ENUM('cliente','profesional','admin') NOT NULL DEFAULT 'cliente',
+  telefono VARCHAR(20),
+  direccion VARCHAR(255),
+  ciudad VARCHAR(100),
+  rol ENUM('cliente','profesional','admin') DEFAULT 'cliente',
   estado_validacion ENUM('pendiente','validado','rechazado') DEFAULT 'pendiente',
-  activo TINYINT(1) NOT NULL DEFAULT 1,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  activo TINYINT(1) DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 
--- Contraseña del admin: admin123
-INSERT INTO usuarios (id, nombre, apellidos, email, password_hash, telefono, direccion, ciudad, rol, estado_validacion, activo, created_at) VALUES
-(1,'Admin','Principal','admin@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6',NULL,NULL,'Málaga','admin','validado',1,NOW());
+-- Admin (contraseña: admin123)
+INSERT INTO usuarios (nombre, apellidos, email, password_hash, ciudad, rol, estado_validacion) VALUES
+('Admin','Principal','admin@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','Málaga','admin','validado');
 
+-- Profesionales de prueba
+INSERT INTO usuarios (nombre, apellidos, email, password_hash, telefono, direccion, ciudad, rol, estado_validacion) VALUES
+('Carlos','Mendoza','carlos@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','600111111','Calle Reforma 1','Málaga','profesional','validado'),
+('Laura','Sánchez','laura@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','600222222','Avenida Centro 12','Málaga','profesional','validado'),
+('Miguel','Torres','miguel@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','600333333','Calle Jardín 8','Málaga','profesional','validado'),
+('Ana','Ramírez','ana@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','600444444','Plaza Norte 3','Málaga','profesional','validado');
+
+-- Cliente de prueba
+INSERT INTO usuarios (nombre, apellidos, email, password_hash, ciudad, rol, estado_validacion) VALUES
+('Paco','Gómez','paco@byh.com','$2y$10$lNBi0mOLCZ4sQ7Y0D4yTo.PY2iD2U4xj7x0xKQ6Q6lqjD4Nf0p8S6','Málaga','cliente','validado');
+
+-- =========================
+-- TABLA: profesional_categorias
+-- =========================
 CREATE TABLE profesional_categorias (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  profesional_id INT UNSIGNED NOT NULL,
-  categoria_id INT UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_profcat (profesional_id, categoria_id),
-  KEY fk_profcat_categoria (categoria_id),
-  CONSTRAINT fk_profcat_categoria FOREIGN KEY (categoria_id) REFERENCES categorias (id) ON DELETE CASCADE,
-  CONSTRAINT fk_profcat_profesional FOREIGN KEY (profesional_id) REFERENCES usuarios (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  profesional_id INT UNSIGNED,
+  categoria_id INT UNSIGNED,
+  FOREIGN KEY (profesional_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE CASCADE
+);
 
-CREATE TABLE portafolio_fotos (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  profesional_id INT UNSIGNED NOT NULL,
-  url_foto VARCHAR(255) NOT NULL,
-  descripcion VARCHAR(255) DEFAULT NULL,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY fk_foto_profesional (profesional_id),
-  CONSTRAINT fk_foto_profesional FOREIGN KEY (profesional_id) REFERENCES usuarios (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO profesional_categorias (profesional_id, categoria_id) VALUES
+(2,5), -- Albañilería
+(3,2), -- Electricidad
+(4,1), -- Fontanería
+(5,3); -- Pintura
 
+-- =========================
+-- TABLA: servicios
+-- =========================
 CREATE TABLE servicios (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  cliente_id INT UNSIGNED NOT NULL,
-  profesional_id INT UNSIGNED NOT NULL,
-  categoria_id INT UNSIGNED DEFAULT NULL,
-  titulo VARCHAR(150) NOT NULL,
-  descripcion TEXT NOT NULL,
-  direccion_trabajo VARCHAR(255) NOT NULL,
-  fecha_solicitud DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  fecha_programada DATETIME DEFAULT NULL,
-  estado ENUM('pendiente','aceptado','en_proceso','completado','cancelado','rechazado') NOT NULL DEFAULT 'pendiente',
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  KEY fk_serv_cliente (cliente_id),
-  KEY fk_serv_profesional (profesional_id),
-  KEY fk_serv_categoria (categoria_id),
-  CONSTRAINT fk_serv_categoria FOREIGN KEY (categoria_id) REFERENCES categorias (id) ON DELETE SET NULL,
-  CONSTRAINT fk_serv_cliente FOREIGN KEY (cliente_id) REFERENCES usuarios (id) ON DELETE CASCADE,
-  CONSTRAINT fk_serv_profesional FOREIGN KEY (profesional_id) REFERENCES usuarios (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT UNSIGNED,
+  profesional_id INT UNSIGNED,
+  categoria_id INT UNSIGNED,
+  titulo VARCHAR(150),
+  descripcion TEXT,
+  direccion_trabajo VARCHAR(255),
+  estado ENUM('pendiente','aceptado','en_proceso','completado','cancelado','rechazado') DEFAULT 'pendiente',
+  FOREIGN KEY (cliente_id) REFERENCES usuarios(id),
+  FOREIGN KEY (profesional_id) REFERENCES usuarios(id),
+  FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+);
 
+-- =========================
+-- TABLA: valoraciones
+-- =========================
 CREATE TABLE valoraciones (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  servicio_id INT UNSIGNED NOT NULL,
-  puntuacion TINYINT UNSIGNED NOT NULL,
-  comentario TEXT DEFAULT NULL,
-  fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_val_servicio (servicio_id),
-  CONSTRAINT fk_val_servicio FOREIGN KEY (servicio_id) REFERENCES servicios (id) ON DELETE CASCADE,
-  CONSTRAINT chk_puntuacion CHECK (puntuacion BETWEEN 1 AND 5)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  servicio_id INT UNSIGNED,
+  puntuacion TINYINT,
+  comentario TEXT,
+  FOREIGN KEY (servicio_id) REFERENCES servicios(id)
+);
