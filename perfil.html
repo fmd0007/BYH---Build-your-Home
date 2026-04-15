@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Perfil</title>
+</head>
+
+<body>
+
+<h2>Perfil Profesional</h2>
+
+<div id="perfil"></div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+fetch("api/perfil.php?id=" + id)
+.then(res => res.json())
+.then(p => {
+
+  document.getElementById("perfil").innerHTML = `
+    <h3>${p.nombre}</h3>
+    <p>${p.profesion}</p>
+    <p>${p.ubicacion}</p>
+    <p>${p.descripcion}</p>
+  `;
+
+});
+
+</script>
+
+</body>
+</html>
