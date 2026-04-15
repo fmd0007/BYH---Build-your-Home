@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Login - BYH</title>
+</head>
+
+<body>
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Contraseña"><br>
+
+<button onclick="login()">Entrar</button>
+
+<script>
+function login() {
+
+  fetch("api/login.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    if(data.usuario){
+      localStorage.setItem("user", JSON.stringify(data.usuario));
+      window.location.href = "index.html";
+    } else {
+      alert("Error en login");
+    }
+
+  });
+
+}
+</script>
+
+</body>
+</html>
