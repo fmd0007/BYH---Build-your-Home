@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mi perfil</title>
+</head>
+
+<body>
+
+<h2>Mi Perfil</h2>
+
+<div id="perfil"></div>
+
+<button onclick="logout()">Cerrar sesión</button>
+
+<script>
+
+// Obtener usuario guardado
+const user = JSON.parse(localStorage.getItem("user"));
+
+if(!user){
+  alert("No has iniciado sesión");
+  window.location.href = "login.html";
+}
+
+// Mostrar datos
+document.getElementById("perfil").innerHTML = `
+  <p><b>Nombre:</b> ${user.nombre}</p>
+  <p><b>Email:</b> ${user.email}</p>
+  <p><b>Tipo:</b> ${user.tipo}</p>
+`;
+
+// Logout
+function logout(){
+  localStorage.removeItem("user");
+  window.location.href = "login.html";
+}
+
+</script>
+
+</body>
+</html>
