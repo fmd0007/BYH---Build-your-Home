@@ -25,7 +25,6 @@ CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
     categoria_padre INT NULL,
-    FOREIGN KEY (categoria_padre) REFERENCES categorias(id)
 );
 
 -- ========================
@@ -41,8 +40,6 @@ CREATE TABLE profesionales (
     ubicacion VARCHAR(150),
     imagen VARCHAR(255),
     verificado BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-    FOREIGN KEY (id_categoria) REFERENCES categorias(id)
 );
 
 -- ========================
@@ -54,8 +51,6 @@ CREATE TABLE mensajes (
     id_receptor INT,
     mensaje TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_emisor) REFERENCES usuarios(id),
-    FOREIGN KEY (id_receptor) REFERENCES usuarios(id)
 );
 
 -- ========================
@@ -68,8 +63,6 @@ CREATE TABLE valoraciones (
     estrellas INT CHECK (estrellas BETWEEN 1 AND 5),
     comentario TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
-    FOREIGN KEY (id_profesional) REFERENCES profesionales(id)
 );
 
 -- ========================
@@ -83,6 +76,4 @@ CREATE TABLE contrataciones (
     metodo_pago ENUM('tarjeta','bizum','transferencia'),
     estado ENUM('pendiente','pagado','cancelado') DEFAULT 'pendiente',
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_cliente) REFERENCES usuarios(id),
-    FOREIGN KEY (id_profesional) REFERENCES profesionales(id)
 );
