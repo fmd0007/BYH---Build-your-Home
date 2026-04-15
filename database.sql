@@ -1,4 +1,3 @@
-
 -- =========================
 -- TABLA: categorias
 -- =========================
@@ -8,12 +7,12 @@ CREATE TABLE categorias (
   descripcion VARCHAR(255)
 );
 
-INSERT INTO categorias (nombre, descripcion) VALUES
-('Fontanería', 'Reparaciones e instalaciones de fontanería'),
-('Electricidad', 'Instalaciones y reparaciones eléctricas'),
-('Pintura', 'Trabajos de pintura'),
-('Carpintería', 'Trabajos de madera'),
-('Albañilería', 'Reformas y obras');
+INSERT INTO categorias (id, nombre, descripcion) VALUES
+(1,'Fontanería','Reparaciones e instalaciones de fontanería'),
+(2,'Electricidad','Instalaciones y reparaciones eléctricas'),
+(3,'Pintura','Trabajos de pintura'),
+(4,'Carpintería','Trabajos de madera'),
+(5,'Albañilería','Reformas y obras');
 
 -- =========================
 -- TABLA: usuarios
@@ -54,16 +53,14 @@ INSERT INTO usuarios (nombre, apellidos, email, password_hash, ciudad, rol, esta
 CREATE TABLE profesional_categorias (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   profesional_id INT UNSIGNED,
-  categoria_id INT UNSIGNED,
-  FOREIGN KEY (profesional_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id) ON DELETE CASCADE
+  categoria_id INT UNSIGNED
 );
 
 INSERT INTO profesional_categorias (profesional_id, categoria_id) VALUES
-(2,5), -- Albañilería
-(3,2), -- Electricidad
-(4,1), -- Fontanería
-(5,3); -- Pintura
+(2,5),
+(3,2),
+(4,1),
+(5,3);
 
 -- =========================
 -- TABLA: servicios
@@ -76,10 +73,7 @@ CREATE TABLE servicios (
   titulo VARCHAR(150),
   descripcion TEXT,
   direccion_trabajo VARCHAR(255),
-  estado ENUM('pendiente','aceptado','en_proceso','completado','cancelado','rechazado') DEFAULT 'pendiente',
-  FOREIGN KEY (cliente_id) REFERENCES usuarios(id),
-  FOREIGN KEY (profesional_id) REFERENCES usuarios(id),
-  FOREIGN KEY (categoria_id) REFERENCES categorias(id)
+  estado ENUM('pendiente','aceptado','en_proceso','completado','cancelado','rechazado') DEFAULT 'pendiente'
 );
 
 -- =========================
@@ -89,6 +83,5 @@ CREATE TABLE valoraciones (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   servicio_id INT UNSIGNED,
   puntuacion TINYINT,
-  comentario TEXT,
-  FOREIGN KEY (servicio_id) REFERENCES servicios(id)
+  comentario TEXT
 );
