@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Categoría</title>
+</head>
+
+<body>
+
+<h2>Profesionales por categoría</h2>
+
+<div id="lista"></div>
+
+<script>
+
+// Obtener categoría de la URL
+const params = new URLSearchParams(window.location.search);
+const categoria = params.get("cat");
+
+// Llamada a la API
+fetch("api/profesionales.php?cat=" + categoria)
+.then(res => res.json())
+.then(data => {
+
+  let html = "";
+
+  if(data.length === 0){
+    html = "<p>No hay profesionales en esta categoría</p>";
+  } else {
+
+    data.forEach(p => {
+      html += `
+        <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+          <h3>${p.nombre}</h3>
+          <p>${p.profesion}</p>
+          <p>${p.ubicacion}</p>
+          <button onclick="verPerfil(${p.id})">Ver perfil</button>
+        </div>
+      `;
+    });
+
+  }
+
+  document.getElementById("lista").innerHTML = html;
+
+});
+
+function verPerfil(id){
+  window.location.href = "perfil.html?id=" + id;
+}
+
+</script>
+
+</body>
+</html>
