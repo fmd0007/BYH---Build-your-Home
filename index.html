@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>BYH</title>
+</head>
+
+<body>
+
+<h2>Profesionales</h2>
+
+<div id="profesionales"></div>
+
+<script>
+
+fetch("api/profesionales.php")
+.then(res => res.json())
+.then(data => {
+
+  let html = "";
+
+  data.forEach(p => {
+    html += `
+      <div>
+        <h3>${p.nombre}</h3>
+        <p>${p.profesion}</p>
+        <p>${p.ubicacion}</p>
+        <button onclick="verPerfil(${p.id})">Ver perfil</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("profesionales").innerHTML = html;
+
+});
+
+function verPerfil(id){
+  window.location.href = "perfil.html?id=" + id;
+}
+
+</script>
+
+</body>
+</html>
