@@ -1,6 +1,3 @@
-DROP DATABASE IF EXISTS byh_buildyourhome;
-CREATE DATABASE byh_buildyourhome CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE byh_buildyourhome;
 
 -- =========================
 -- TABLA: categorias
