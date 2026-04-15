@@ -1,8 +1,4 @@
--- ========================
--- BASE DE DATOS
--- ========================
-CREATE DATABASE buildyourhome;
-USE buildyourhome;
+
 
 -- ========================
 -- USUARIOS
