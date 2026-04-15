@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Registro - BYH</title>
+</head>
+
+<body>
+
+<h2>Registro</h2>
+
+<input id="nombre" placeholder="Nombre"><br>
+<input id="apellidos" placeholder="Apellidos"><br>
+<input id="email" placeholder="Email"><br>
+<input id="telefono" placeholder="Teléfono"><br>
+<input id="password" type="password" placeholder="Contraseña"><br>
+
+<select id="tipo">
+  <option value="cliente">Cliente</option>
+  <option value="trabajador">Trabajador</option>
+</select><br><br>
+
+<button onclick="registrar()">Registrarse</button>
+
+<script>
+function registrar() {
+
+  fetch("api/registro.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nombre: document.getElementById("nombre").value,
+      apellidos: document.getElementById("apellidos").value,
+      email: document.getElementById("email").value,
+      telefono: document.getElementById("telefono").value,
+      password: document.getElementById("password").value,
+      tipo: document.getElementById("tipo").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.mensaje);
+    window.location.href = "login.html";
+  });
+
+}
+</script>
+
+</body>
+</html>
